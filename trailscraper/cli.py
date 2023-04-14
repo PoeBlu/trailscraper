@@ -44,7 +44,6 @@ def root_group(verbose):
               help='End date, e.g. "2017-01-01" or "now". Defaults to "now".')
 @click.option('--wait', default=False, is_flag=True,
               help='Wait until events after the specified timeframe are found.')
-# pylint: disable=too-many-arguments
 def download(bucket, prefix, account_id, region, log_dir, from_s, to_s, wait):
     """Downloads CloudTrail Logs from S3."""
     log_dir = os.path.expanduser(log_dir)
@@ -57,9 +56,9 @@ def download(bucket, prefix, account_id, region, log_dir, from_s, to_s, wait):
     if wait:
         last_timestamp = last_event_timestamp_in_dir(log_dir)
         while last_timestamp <= to_date:
-            click.echo("CloudTrail logs haven't caught up to "+str(to_date)+" yet. "+
-                       "Most recent timestamp: "+str(last_timestamp.astimezone(to_date.tzinfo))+". "+
-                       "Trying again in 60sec.")
+            click.echo(
+                f"CloudTrail logs haven't caught up to {str(to_date)} yet. Most recent timestamp: {str(last_timestamp.astimezone(to_date.tzinfo))}. Trying again in 60sec."
+            )
 
             time.sleep(60*1)
 

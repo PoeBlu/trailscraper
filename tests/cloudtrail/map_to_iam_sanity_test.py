@@ -39,7 +39,6 @@ UNDOCUMENTED = {
     "s3:GetAnalyticsConfiguration",
     "s3:GetEncryptionConfiguration",
     "s3:GetInventoryConfiguration",
-    "s3:GetInventoryConfiguration",
     "s3:GetMetricsConfiguration",
     "s3:PutAnalyticsConfiguration",
     "s3:PutEncryptionConfiguration",
@@ -1178,7 +1177,7 @@ def unknown_actions():
     iam_actions_from_api_calls = set()
     for api_call in all_aws_api_methods():
         x = api_call.split(":")
-        r = Record(x[0] + ".amazonaws.com", x[1])
+        r = Record(f"{x[0]}.amazonaws.com", x[1])
         statement = r.to_statement()
         if statement is not None:
             iam_actions_from_api_calls.add(statement.Action[0].json_repr())

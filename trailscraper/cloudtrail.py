@@ -37,8 +37,7 @@ class Record:
         self.assumed_role_arn = assumed_role_arn
 
     def __repr__(self):
-        return "Record(event_source={} event_name={} event_time={} resource_arns={})" \
-            .format(self.event_source, self.event_name, self.event_time, self.resource_arns)
+        return f"Record(event_source={self.event_source} event_name={self.event_name} event_time={self.event_time} resource_arns={self.resource_arns})"
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -154,7 +153,7 @@ class Record:
         return Statement(
             Effect="Allow",
             Action=[Action("apigateway", http_method)],
-            Resource=["arn:aws:apigateway:{}::{}".format(region, resource_path)]
+            Resource=[f"arn:aws:apigateway:{region}::{resource_path}"],
         )
 
     def to_statement(self):
@@ -213,8 +212,7 @@ class LogFile:
 
 def _resource_arns(json_record):
     resources = json_record.get('resources', [])
-    arns = [resource['ARN'] for resource in resources if 'ARN' in resource]
-    return arns
+    return [resource['ARN'] for resource in resources if 'ARN' in resource]
 
 
 def _assumed_role_arn(json_record):
@@ -296,9 +294,10 @@ def load_from_api(from_date, to_date):
     )
     records = []
     for response in response_iterator:
-        for event in response['Events']:
-            records.append(_parse_record(json.loads(event['CloudTrailEvent'])))
-
+        records.extend(
+            _parse_record(json.loads(event['CloudTrailEvent']))
+            for event in response['Events']
+        )
     return records
 
 
