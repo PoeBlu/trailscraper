@@ -50,9 +50,7 @@ class Action(BaseElement):
         for prefix in BASE_ACTION_PREFIXES:
             without_prefix = re.sub(prefix, "", without_prefix)
 
-        without_plural = re.sub(r"s$", "", without_prefix)
-
-        return without_plural
+        return re.sub(r"s$", "", without_prefix)
 
     def matching_actions(self, allowed_prefixes):
         """Return a matching create action for this Action"""
@@ -90,8 +88,9 @@ class Statement(BaseElement):
     def merge(self, other):
         """Merge two statements into one."""
         if self.Effect != other.Effect:
-            raise ValueError("Trying to combine two statements with differing effects: {} {}".format(self.Effect,
-                                                                                                     other.Effect))
+            raise ValueError(
+                f"Trying to combine two statements with differing effects: {self.Effect} {other.Effect}"
+            )
 
         effect = self.Effect
 

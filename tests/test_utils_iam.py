@@ -10,8 +10,12 @@ def all_aws_api_methods():
     for line in boto_service_definition_files():
         data = json.load(open(line.strip()))
         if 'operations' in data:
-            for action in data['operations']:
-                result.append(data['metadata']['endpointPrefix'] + ":" + data['operations'][action]['name'])
+            result.extend(
+                data['metadata']['endpointPrefix']
+                + ":"
+                + data['operations'][action]['name']
+                for action in data['operations']
+            )
         else:
             logging.warning('problem with %s', line.strip())
 

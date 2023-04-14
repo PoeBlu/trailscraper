@@ -8,8 +8,7 @@ def _guess_actions(actions, allowed_prefixes):
 
 
 def _extend_statement(statement, allowed_prefixes):
-    extended_actions = _guess_actions(statement.Action, allowed_prefixes)
-    if extended_actions:
+    if extended_actions := _guess_actions(statement.Action, allowed_prefixes):
         return [statement, Statement(Action=extended_actions,
                                      Effect=statement.Effect,
                                      Resource=["*"])]
